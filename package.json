@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "vue": "^2.5.17",
+    "vue-radial-progress": "^0.2.10",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.2.0",
