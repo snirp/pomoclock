@@ -15,6 +15,9 @@ const store = new Vuex.Store({
     activeTimer: 'work',
     sessionsCompleted: 0,
     interval: null,
+    playSound: true,
+    volume: 0.2,
+    notifications: true,
   },
   actions: {
     intervalAsync ({ commit }, func ) {
@@ -71,7 +74,7 @@ store.subscribe((mutation, state) => {
     batchSize: state.batchSize,
 	};
 
-	localStorage.setItem('store', JSON.stringify(store));
+	localStorage.setItem('store', JSON.stringify(state));
 });
 
 

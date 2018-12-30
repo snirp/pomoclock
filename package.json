@@ -9,8 +9,9 @@
   },
   "dependencies": {
     "vue": "^2.5.17",
-    "vue-radial-progress": "^0.2.10",
+    "vue-progress": "^0.2.1",
     "vue-router": "^3.0.1",
+    "vue-slider-component": "^2.8.3",
     "vuex": "^3.0.1",
     "vuex-persistedstate": "^2.5.4"
   },

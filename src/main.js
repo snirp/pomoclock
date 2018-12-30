@@ -2,6 +2,9 @@ import Vue from 'vue'
 import App from './components/App.vue'
 import router from './router'
 import store from './store'
+import VueProgress from 'vue-progress'
+
+Vue.use(VueProgress)
 
 Vue.config.productionTip = false
 

@@ -1,71 +1,89 @@
 <template>
   <div class="about">
-    <template v-for="(setting, index) in settingsList">
-      <label :key="index">{{setting.label}}</label>
-      <input :key="index" :value="[setting.entry]" @input="updateSetting" :name="setting.entry">
-    </template>
     <p>seconds left: {{secondsLeft}}</p>
     <p>active timer: {{activeTimer}}</p>
-    <input :value="work" @input="updateSetting" name="work">
     <hr>
     <button @click="resetTimer">Reset timer</button>
     <button @click="pauzeTimer" v-if="interval">Pauze timer</button>
     <button @click="startTimer" v-else>Start</button>
-    <radial-progress-bar 
-      :diameter="200"
-      :completed-steps="completedSteps"
-      :total-steps="totalSteps"
-      animateSpeed="500"
-      >
-    </radial-progress-bar>
-    <p>{{totalSteps}}</p>
+    <div class="face">
+      <progress-bar type="circle" ref="circle" :options="{color: '#007AFF', strokeWidth: 0.5}"></progress-bar>
+    </div>
+    <div class="notify-dial">
+      <progress-bar type="circle" ref="notifydial" :options="{color: 'orange', strokeWidth: 5}"></progress-bar>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import RadialProgressBar from 'vue-radial-progress'
 
 export default {
-  created () {
-    this.settingsList = [
-      { 
-        entry: 'work',
-        label: "Work minutes" 
-      },
-      {
-        entry: 'sessionCount',
-        label: 'Number of pomodoro sessions'
-      }
-    ]
+  created() {
+    this.audio = new Audio(require('../assets/beep.mp3'));
+  },
+  mounted() {
+    this.$refs.circle.set(this.elapsedSeconds/this.totalSeconds);
+    this.$refs.notifydial.set(this.volume);
   },
   computed: {
-    totalSteps(){
+    totalSeconds(){
       return this.$store.state[this.$store.state.activeTimer] * 60;
     },
-    completedSteps(){
-      return this.totalSteps - this.$store.state.secondsLeft;
+    elapsedSeconds(){
+      return this.totalSeconds - this.$store.state.secondsLeft;
     },
     ...mapState([
       'sessionCount', 'work', 'pauze', 'secondsLeft', 'activeTimer', 
-      'sessionsCompleted', 'batchSize', 'interval', 'break'
+      'sessionsCompleted', 'batchSize', 'interval', 'break', 'playSound',
+      'notifications', 'volume'
     ])
+  },
+  watch: {
+    elapsedSeconds(elapsed){
+      this.$refs.circle.set(elapsed/this.totalSeconds);
+    }
   },
   methods: {
     updateSetting(e){
       this.$store.commit('updateValue', {name: e.target.name, value: e.target.value});
       this.resetTimer();
     },
-    pauzeTimer(e){ this.$store.commit('stopTimer') },
+    notifyBrowser(message) {
+      if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+      } else if (Notification.permission === "granted") {
+        var notification = new Notification(message);
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(function (permission) {
+          if (permission === "granted") {
+            var notification = new Notification(message);
+          }
+        });
+      }
+    },
+    pauzeTimer(e){ 
+      this.$store.commit('stopTimer') 
+    },
     resetTimer(e){ 
       this.$store.commit('stopTimer');
       this.$store.commit('resetTimer');
       this.$store.commit('resetSeconds');      
      },
-    startTimer(e){ this.$store.dispatch('intervalAsync', this.countDown) },
+    startTimer(e){
+      this.$store.dispatch('intervalAsync', this.countDown)
+    },
+    notify(timer){
+      if (this.notifications) this.notifyBrowser(`You finished a ${this.activeTimer} session!`);
+      if (this.playSound) {
+        this.audio.volume = this.volume;
+        this.audio.play();
+      };
+    },
     countDown(){
       this.$store.commit('decrement');
       if (this.secondsLeft == 0){
+        this.notify(this.activeTimer);
         if (this.activeTimer !== 'work') {
           this.$store.commit('setActive', 'work');
         } else {
@@ -84,8 +102,16 @@ export default {
       }
     }
   },
-  components: {
-    RadialProgressBar
-  },
 }
 </script>
+
+<style scoped>
+.face {
+  max-width: 400px;
+  margin: 0 auto;
+}
+.notify-dial {
+  max-width: 100px;
+  margin: 0 auto;
+}
+</style>
