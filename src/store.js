@@ -6,24 +6,23 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     version: '',
-    sessionCount: 2,
+    sessionCount: 7,
     batchSize: 4,
     work: 3,
-    pauze: 1,
-    break: 2,
+    shortBreak: 1,
+    longBreak: 2,
     secondsLeft: 3*60,
     activeTimer: 'work',
     sessionsCompleted: 0,
     interval: null,
     playSound: true,
     volume: 0.2,
-    notifications: true,
   },
   actions: {
     intervalAsync ({ commit }, func ) {
       commit('initInterval', setInterval(() => {
         func();
-      }, 1000))
+      }, 20))
     }
   },
   mutations: {
@@ -53,7 +52,7 @@ const store = new Vuex.Store({
       clearInterval(state.interval);
       state.interval = null;
     },
-    resetTimer(state){
+    initiateTimer(state){
       state.activeTimer = 'work';
       state.sessionsCompleted = 0;
     },
@@ -64,16 +63,6 @@ const store = new Vuex.Store({
 })
 
 store.subscribe((mutation, state) => {
-  // State to save to localStorage
-	const store = {
-		version: state.version,
-    sessionCount: state.sessionCount,
-    work: state.work,
-    pauze: state.pauze,
-    break: state.break,
-    batchSize: state.batchSize,
-	};
-
 	localStorage.setItem('store', JSON.stringify(state));
 });
 

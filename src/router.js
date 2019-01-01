@@ -2,9 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './components/Home.vue'
 import About from './components/About.vue'
-import Notifications from './components/Notifications.vue'
-import Minutes from './components/Minutes.vue'
-import Sessions from './components/Sessions.vue'
+import Settings from './components/Settings.vue'
 
 Vue.use(Router)
 
@@ -21,19 +19,9 @@ export default new Router({
       component: About
     },
     {
-      path: '/notifications',
-      name: 'notifications',
-      component: Notifications
+      path: '/settings',
+      name: 'settings',
+      component: Settings
     },
-    {
-      path: '/minutes',
-      name: 'minutes',
-      component: Minutes
-    },
-    {
-      path: '/sessions',
-      name: 'sessions',
-      component: Sessions
-    }
   ]
 })

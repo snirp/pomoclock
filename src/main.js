@@ -3,8 +3,12 @@ import App from './components/App.vue'
 import router from './router'
 import store from './store'
 import VueProgress from 'vue-progress'
+import ToggleButton from 'vue-js-toggle-button'
+import vueSlider from 'vue-slider-component'
 
 Vue.use(VueProgress)
+Vue.use(ToggleButton)
+Vue.use(vueSlider)
 
 Vue.config.productionTip = false
 
