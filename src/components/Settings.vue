@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import vueSlider from 'vue-slider-component'
 import timerMixin from '../mixins/timerMixin'
 import {WORK, LONG, SHORT} from '../constants'
@@ -74,10 +73,6 @@ export default {
         }
         this.$store.commit('updateValue', {name:'batchSize', value})
       }
-    },
-    playSound: {
-      get() { return this.$store.state.playSound; },
-      set(value) { this.$store.commit('updateValue', {name:'playSound', value}) }
     },
     volume: {
       get() { return this.$store.state.volume; },

@@ -2,7 +2,7 @@
   <div class="about">
     <p>{{formatMinutesAndSeconds(secondsLeft)}}</p>
     <p>{{timers[activeTimer].display}}</p>
-    <counter :dashCount="sessionCount" :activeCount="sessionsCompleted+1"/>
+    <counter ref="counter" :dashCount="sessionCount" :activeCount="sessionsCompleted+1"/>
     {{ sessionsCompleted }} / {{ sessionCount }}
     <hr>
     <button @click="resetMe">Reset timer</button>
@@ -37,6 +37,7 @@ export default {
   mounted() {
     this.$refs.circle.set(this.elapsedSeconds/this.totalSeconds);
     this.$refs.notifydial.set(this.volume);
+    this.$refs.counter.set(this.sessionsCompleted+1)
   },
   mixins: [timerMixin],
   components: {Counter},

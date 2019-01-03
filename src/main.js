@@ -7,9 +7,6 @@ import ToggleButton from 'vue-js-toggle-button'
 
 Vue.use(VueProgress);
 Vue.use(ToggleButton);
-Vue.prototype.WORK = 'work';
-Vue.prototype.SHORT = 'short break';
-Vue.prototype.LONG = 'long break'
 
 Vue.config.productionTip = false
 
