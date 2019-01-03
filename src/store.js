@@ -1,18 +1,21 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import {WORK, LONG, SHORT} from './constants'
+import {version} from '../package.json';
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    version: '',
+    version,
     sessionCount: 7,
     batchSize: 4,
-    work: 3,
-    shortBreak: 1,
-    longBreak: 2,
+    [WORK]: 3,
+    [SHORT]: 1,
+    [LONG]: 2,
     secondsLeft: 3*60,
-    activeTimer: 'work',
+    activeTimer: WORK,
     sessionsCompleted: 0,
     interval: null,
     playSound: true,
@@ -28,10 +31,9 @@ const store = new Vuex.Store({
   mutations: {
 		initializeStore(state) {
 			if(localStorage.getItem('store')) {
-				this.replaceState(
-					Object.assign(state, JSON.parse(localStorage.getItem('store')))
-				);
-			}
+        const store = JSON.parse(localStorage.getItem('store'));
+        if(store.version == state.version) this.replaceState(Object.assign(state, store));
+      }
     },
     updateValue(state, n) {
       state[n.name] = n.value;
@@ -53,7 +55,7 @@ const store = new Vuex.Store({
       state.interval = null;
     },
     initiateTimer(state){
-      state.activeTimer = 'work';
+      state.activeTimer = WORK;
       state.sessionsCompleted = 0;
     },
     resetSeconds(state){

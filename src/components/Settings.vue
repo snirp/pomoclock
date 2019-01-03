@@ -1,21 +1,21 @@
 <template>
   <div>
-    <p>Work minutes</p>
-    <vue-slider ref="work" v-model="work"/>
+    <p>Work minutes: {{work}}</p>
+    <vue-slider v-model="work" v-bind="{min: 1, max: 60, tooltip: false}"/>
     <p>Short break minutes</p>
-    <vue-slider ref="shortBreak" v-model="shortBreak"/>
+    <vue-slider v-model="shortBreak" v-bind="{min: 1, max: 15, tooltip: false}"/>
     <p>Long break minutes</p>
-    <vue-slider ref="longBreak" v-model="longBreak"/>
-    <!-- <hr />
-    <p>Session count:</p>
-    <vue-slider ref="count" v-model="this.sessionCount"/>
-    <p>Long break after:</p>
-    <vue-slider ref="batch" v-model="this.batchSize"/>
+    <vue-slider v-model="longBreak" v-bind="{min: 1, max: 45, tooltip: false}"/>
+    <hr />
+    <p>Session count</p>
+    <vue-slider v-model="sessionCount" v-bind="{min: 1, max: 20, tooltip: false}"/>
+    <p>Long break after</p>
+    <vue-slider v-model="batchSize" v-bind="{min: 1, max: 10, tooltip: false}"/>
     <hr />
     <p>Sounds</p>
-    <toggle-button v-model="this.playSound"/>
+    <toggle-button v-model="playSound"/>
     <p>Volume</p>
-    <vue-slider ref="volume" v-model="this.volume"/> -->
+    <vue-slider v-model="volume" v-bind="{min: 0, max: 1, interval: 0.1, tooltip: false}"/>
   </div>
 </template>
 
@@ -23,6 +23,7 @@
 import { mapState } from 'vuex'
 import vueSlider from 'vue-slider-component'
 import timerMixin from '../mixins/timerMixin'
+import {WORK, LONG, SHORT} from '../constants'
 
 export default {
   mixins: [timerMixin],
@@ -33,10 +34,8 @@ export default {
         const secOld = this.$store.state[timer]*60;
         const secNew = value*60;
         if (secNew <= secOld-secLeft){
-          console.log('switching...')
           this.switchTimer();
         } else {
-          console.log('update time...')
           this.$store.commit('updateValue', {name:'secondsLeft', value: secLeft + secNew-secOld})
         }
       }
@@ -46,16 +45,44 @@ export default {
   computed: {
     work: {
       get() { return this.$store.state.work; },
-      set(value) { this.setMinute(value, 'work') },
+      set(value) { this.setMinute(value, WORK) },
     },
     shortBreak: {
       get() { return this.$store.state.shortBreak; },
-      set(value) { this.setMinute(value, 'shortBreak') },
+      set(value) { this.setMinute(value, SHORT) },
     },
     longBreak: {
       get() { return this.$store.state.longBreak; },
-      set(value) { this.setMinute(value, 'longBreak') },
-    }
+      set(value) { this.setMinute(value, LONG) },
+    },
+    sessionCount: {
+      get() { return this.$store.state.sessionCount; },
+      set(value) { 
+        if(value <= this.$store.state.sessionsCompleted){
+          this.resetTimer();
+        }
+        this.$store.commit('updateValue', {name:'sessionCount', value})
+      }
+    },
+    batchSize: {
+      get() { return this.$store.state.batchSize; },
+      set(value) {
+        if (this.$store.state.activeTimer == LONG && this.$store.state.sessionsCompleted % this.$store.state.batchSize != 0){
+          this.$store.commit('updateValue', {name:'activeTimer', value: SHORT})
+        } else if(this.$store.state.activeTimer == SHORT && this.$store.state.sessionsCompleted % this.$store.state.batchSize == 0) {
+          this.$store.commit('updateValue', {name:'activeTimer', value: LONG})
+        }
+        this.$store.commit('updateValue', {name:'batchSize', value})
+      }
+    },
+    playSound: {
+      get() { return this.$store.state.playSound; },
+      set(value) { this.$store.commit('updateValue', {name:'playSound', value}) }
+    },
+    volume: {
+      get() { return this.$store.state.volume; },
+      set(value) { this.$store.commit('updateValue', {name:'volume', value}) }
+    },
   },
   components: {
     vueSlider,

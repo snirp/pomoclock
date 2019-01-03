@@ -1,11 +1,18 @@
+import {WORK, LONG, SHORT} from '../constants'
+
 export default {
   created: function(){
-    //pass
+  },
+  computed: {
+    playSound: {
+      get() { return this.$store.state.playSound; },
+      set(value) { this.$store.commit('updateValue', {name:'playSound', value}) }
+    },
   },
   methods: {
     switchTimer(){
-      if (this.$store.state.activeTimer !== 'work') {
-        this.$store.commit('setActive', 'work');
+      if (this.$store.state.activeTimer !== WORK) {
+        this.$store.commit('setActive', WORK);
       } else {
         this.$store.commit('incrementSessions');
         if (this.$store.state.sessionsCompleted == this.$store.state.sessionCount){
@@ -13,9 +20,9 @@ export default {
           return null;
         }
         if (this.$store.state.sessionsCompleted % this.$store.state.batchSize == 0) {
-          this.$store.commit('setActive', 'longBreak');
+          this.$store.commit('setActive', LONG);
         } else {
-          this.$store.commit('setActive', 'shortBreak');
+          this.$store.commit('setActive', SHORT);
         }
       }
       this.$store.commit('resetSeconds');

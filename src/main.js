@@ -4,11 +4,12 @@ import router from './router'
 import store from './store'
 import VueProgress from 'vue-progress'
 import ToggleButton from 'vue-js-toggle-button'
-import vueSlider from 'vue-slider-component'
 
-Vue.use(VueProgress)
-Vue.use(ToggleButton)
-Vue.use(vueSlider)
+Vue.use(VueProgress);
+Vue.use(ToggleButton);
+Vue.prototype.WORK = 'work';
+Vue.prototype.SHORT = 'short break';
+Vue.prototype.LONG = 'long break'
 
 Vue.config.productionTip = false
 
