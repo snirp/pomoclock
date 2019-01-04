@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-link to="/">Clock</router-link>
     <p>Work minutes: {{work}}</p>
     <vue-slider v-model="work" v-bind="{min: 1, max: 60, tooltip: false}"/>
     <p>Short break minutes</p>
