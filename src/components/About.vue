@@ -1,14 +1,31 @@
 <template>
   <div class="about">
+    <button @click="toggleSound">
+      <icon-base v-if="playSound"><icon-volume/></icon-base>
+      <icon-base v-else><icon-mute/></icon-base>
+    </button>
+    <button @click="reset">
+      <icon-base><icon-reset/></icon-base>
+    </button>
+    <span>
+      <button @click="pauze" v-if="interval">
+        <icon-base><icon-pauze/></icon-base>
+      </button>
+      <button @click="start" v-else>
+        <icon-base><icon-play/></icon-base>
+      </button>
+    </span>
+    <icon-base><icon-settings/></icon-base>
+    <icon-base><icon-pomodoro/></icon-base>
     <p>{{formatMinutesAndSeconds(secondsLeft)}}</p>
     <p>{{timers[activeTimer].display}}</p>
     <counter :dashCount="sessionCount" :activeCount="sessionsCompleted+1"/>
     {{ sessionsCompleted }} / {{ sessionCount }}
     <hr>
-    <button @click="reset">Reset timer</button>
-    <button @click="pauze" v-if="interval">Pauze timer</button>
-    <button @click="start" v-else>Start</button>
-    <button @click="toggleSound"><span v-if="playSound">ON</span><span v-else>MUTED</span></button>
+    
+    <!-- <button @click="pauze" v-if="interval">Pauze timer</button>
+    <button @click="start" v-else>Start</button> -->
+    
     <div class="face">
       <progress-bar type="circle" ref="circle" :options="{color: '#007AFF', strokeWidth: 0.5}"></progress-bar>
     </div>
@@ -24,6 +41,14 @@ import { mapState } from 'vuex'
 import timerMixin from '../mixins/timerMixin'
 import {WORK, LONG, SHORT} from '../constants'
 import Counter from '@/components/Counter.vue'
+import IconBase from './IconBase.vue'
+import IconMute from './icons/IconMute.vue'
+import IconReset from './icons/IconReset.vue'
+import IconSettings from './icons/IconSettings.vue'
+import IconVolume from './icons/IconVolume.vue'
+import IconPlay from './icons/IconPlay.vue'
+import IconPauze from './icons/IconPauze.vue'
+import IconPomodoro from './icons/IconPomodoro.vue'
 
 export default {
   created() {
@@ -39,7 +64,7 @@ export default {
     this.$refs.notifydial.set(this.volume/10);
   },
   mixins: [timerMixin],
-  components: {Counter},
+  components: {Counter, IconBase, IconMute, IconReset, IconSettings, IconVolume, IconPlay, IconPauze, IconPomodoro},
   computed: {
     totalSeconds(){
       return this.$store.state[this.$store.state.activeTimer] * 60;
@@ -108,4 +133,11 @@ export default {
   max-width: 100px;
   margin: 0 auto;
 }
+button {
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+button:hover{ cursor:pointer;}
+button:focus{ color:red;}
 </style>
