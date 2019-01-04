@@ -2,12 +2,12 @@
   <div class="about">
     <p>{{formatMinutesAndSeconds(secondsLeft)}}</p>
     <p>{{timers[activeTimer].display}}</p>
-    <counter ref="counter" :dashCount="sessionCount" :activeCount="sessionsCompleted+1"/>
+    <counter :dashCount="sessionCount" :activeCount="sessionsCompleted+1"/>
     {{ sessionsCompleted }} / {{ sessionCount }}
     <hr>
-    <button @click="resetMe">Reset timer</button>
-    <button @click="pauzeMe" v-if="interval">Pauze timer</button>
-    <button @click="startMe" v-else>Start</button>
+    <button @click="reset">Reset timer</button>
+    <button @click="pauze" v-if="interval">Pauze timer</button>
+    <button @click="start" v-else>Start</button>
     <button @click="toggleSound"><span v-if="playSound">ON</span><span v-else>MUTED</span></button>
     <div class="face">
       <progress-bar type="circle" ref="circle" :options="{color: '#007AFF', strokeWidth: 0.5}"></progress-bar>
@@ -36,8 +36,7 @@ export default {
   },
   mounted() {
     this.$refs.circle.set(this.elapsedSeconds/this.totalSeconds);
-    this.$refs.notifydial.set(this.volume);
-    this.$refs.counter.set(this.sessionsCompleted+1)
+    this.$refs.notifydial.set(this.volume/10);
   },
   mixins: [timerMixin],
   components: {Counter},
@@ -60,26 +59,32 @@ export default {
       return Math.floor(seconds/60)+':'+('0'+seconds % 60).slice(-2);
     },
     notifyBrowser(message) {
-      if (!("Notification" in window)) {
-        alert("This browser does not support desktop notification");
-      } else if (Notification.permission === "granted") {
-        var notification = new Notification(message);
+      if (Notification.permission === "granted") {
+        new Notification(message);
       } else if (Notification.permission !== "denied") {
         Notification.requestPermission().then(function (permission) {
           if (permission === "granted") {
-            var notification = new Notification(message);
+            new Notification(message);
           }
         });
       }
     },
-    toggleSound(e){ this.playSound = !this.playSound },
-    pauzeMe(e){ this.$store.commit('stopTimer'); },
-    resetMe(e){ this.resetTimer(); },
-    startMe(e){ this.$store.dispatch('intervalAsync', this.countDown) },
+    toggleSound(e){
+      this.playSound = !this.playSound;
+    },
+    pauze(e){
+      this.$store.commit('stopTimer');
+    },
+    reset(e){
+      this.resetTimer();
+    },
+    start(e){
+      this.$store.dispatch('intervalAsync', this.countDown)
+    },
     notify(timer){
-      this.notifyBrowser(`You finished a ${this.activeTimer} session!`);
+      this.notifyBrowser(this.timers[this.activeTimer].message);
       if (this.playSound) {
-        this.audio.volume = this.volume;
+        this.audio.volume = this.volume/10;
         this.audio.play();
       };
     },

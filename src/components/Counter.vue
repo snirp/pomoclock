@@ -1,18 +1,18 @@
 <template>
-  <svg :width="this.UNITS" :height="this.UNITS"> 
+  <svg :width="UNITS" :height="UNITS"> 
     <path
-      :d="this.describeArc(this.UNITS/2, this.UNITS/2, this.getRadius(), this.start, this.end)" 
+      :d="describeArc(UNITS/2, UNITS/2, getRadius(), start, end)" 
       fill="none" 
       :stroke="stroke" 
       :stroke-width="strokeWidth" 
-      :stroke-dasharray="this.getDashArray(this.dashCount)"
+      :stroke-dasharray="getDashArray(dashCount)"
     />    
     <path
-      :d="this.describeArc(this.UNITS/2, this.UNITS/2, this.getRadius(), this.start, this.activeEnd())" 
+      :d="describeArc(UNITS/2, UNITS/2, getRadius(), start, activeEnd())" 
       fill="none" 
       :stroke="activeStroke" 
       :stroke-width="strokeWidth" 
-      :stroke-dasharray="this.getDashArray(this.activeCount)"
+      :stroke-dasharray="getDashArray(activeCount)"
     />
   </svg>
 </template>

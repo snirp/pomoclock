@@ -8,18 +8,28 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    // Semver string from package to invalidate local cache
     version,
-    sessionCount: 7,
+    // Total number of pomodoro sessions
+    sessionCount: 8,
+    // Number of sessions between long breaks
     batchSize: 4,
-    [WORK]: 3,
-    [SHORT]: 1,
-    [LONG]: 2,
-    secondsLeft: 3*60,
+    // Active timer: WORK / SHORT / LONG
     activeTimer: WORK,
+    // Default timer settings in minutes
+    [WORK]: 25,
+    [SHORT]: 5,
+    [LONG]: 15,
+    // Initial value of seconds left (derived from WORK)
+    // TODO: set to null initially and initialize with proper value if unset
+    secondsLeft: 25*60,
+    // Incremented when worktimer is finished
     sessionsCompleted: 0,
+    // Interval ID of current timer (allowing it to be cleared)
     interval: null,
     playSound: true,
-    volume: 0.2,
+    // Between 0 and 10
+    volume: 2,
   },
   actions: {
     intervalAsync ({ commit }, func ) {

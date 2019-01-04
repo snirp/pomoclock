@@ -1,12 +1,14 @@
 import {WORK, LONG, SHORT} from '../constants'
 
 export default {
-  created: function(){
-  },
   computed: {
     playSound: {
-      get() { return this.$store.state.playSound; },
-      set(value) { this.$store.commit('updateValue', {name:'playSound', value}) }
+      get(){ 
+        return this.$store.state.playSound;
+      },
+      set(value){
+        this.$store.commit('updateValue', {name: 'playSound', value})
+      }
     },
   },
   methods: {
