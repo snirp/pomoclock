@@ -15,13 +15,13 @@
         <icon-base><icon-play/></icon-base>
       </button>
     </span>
-    <icon-base><icon-settings/></icon-base>
+    <router-link to="/settings"><icon-base><icon-settings/></icon-base></router-link>
+    
     <icon-base><icon-pomodoro/></icon-base>
     <p>{{formatMinutesAndSeconds(secondsLeft)}}</p>
     <p>{{timers[activeTimer].display}}</p>
     <counter :dashCount="sessionCount" :activeCount="sessionsCompleted+1"/>
-    {{ sessionsCompleted }} / {{ sessionCount }}
-    <hr>
+
     
     <!-- <button @click="pauze" v-if="interval">Pauze timer</button>
     <button @click="start" v-else>Start</button> -->
@@ -137,6 +137,8 @@ button {
     border: none;
     background-color: transparent;
     outline: none;
+    padding: 0;
+    margin: 0;
 }
 button:hover{ cursor:pointer;}
 button:focus{ color:red;}
