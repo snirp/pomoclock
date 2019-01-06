@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import VueProgress from 'vue-progress'
 import ToggleButton from 'vue-js-toggle-button'
+import (/* webpackPreload: true */ 'typeface-source-code-pro/index.css')
 
 Vue.use(VueProgress);
 Vue.use(ToggleButton);

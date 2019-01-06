@@ -1,5 +1,5 @@
 <template>
-  <svg :width="UNITS" :height="UNITS"> 
+  <svg viewBox="0 0 100 100">
     <path
       :d="describeArc(UNITS/2, UNITS/2, getRadius(), start, end)" 
       fill="none" 
@@ -28,7 +28,7 @@ export default {
     activeCount: Number,
     strokeWidth: {
       type: Number, 
-      default: 2
+      default: 3
     },
     stroke: {
       type: String, 
