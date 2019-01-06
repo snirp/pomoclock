@@ -3,15 +3,23 @@
     <div class="face">
       <progress-bar type="circle" ref="circle" :options="{color: 'dodgerblue', strokeWidth: 0.7}"></progress-bar>
       <div class="face-center">
-        <div class="item-name">{{timers[activeTimer].display}}</div>
+        <!--<div class="item-name">{{timers[activeTimer].display}}</div>
         <div class="item-digital"  v-html="formatMinutesAndSeconds(secondsLeft)"></div>
-        <div class="item-toggle">
+         <div class="item-toggle">
           <button @click="pauze" v-if="interval">
             <icon-base><icon-pauze/></icon-base>
           </button>
           <button @click="start" v-else>
             <icon-base name="Play"><icon-play/></icon-base>
           </button>
+        </div> -->
+        <div class="item-settings flex-center">
+          <router-link to="/settings">
+            <icon-base width="7vmin" height="7vmin"><icon-settings/></icon-base>
+          </router-link>
+          <polar :item="0" v-bind="{settingDialProps}">wo</polar>
+          <polar :item="1" v-bind="{settingDialProps}">sh</polar>
+          <polar :item="4" v-bind="{settingDialProps}">lo</polar>
         </div>
         <div class="item-settings flex-center">
           <router-link to="/settings"><icon-base width="7vmin" height="7vmin"><icon-settings/></icon-base></router-link>
@@ -56,15 +64,20 @@
     </div>
 
     <!-- TEST -->
-    <div style="position:relative; width: 300px; height: 300px; background-color:gray;">
-      <polar offset="100px" :cardinal="1" :total="7" :zeroAngle="270"><div style="border-radius:50%;background-color:blue;width:100%;height:100%">ffsd</div></polar>
-      <polar offset="100px" :cardinal="2" :total="7" :zeroAngle="270">three</polar>
-      <polar offset="100px" :cardinal="3" :total="7" :zeroAngle="270">three</polar>
-      <polar offset="100px" :cardinal="4" :total="7" :zeroAngle="270">four</polar>
-      <polar offset="100px" :cardinal="5" :total="7" :zeroAngle="270">four</polar>
-      <polar offset="100px" :cardinal="6" :total="7" :zeroAngle="270">four</polar>
-      <polar offset="100px" :cardinal="7" :total="7" :zeroAngle="270">four</polar>
-      hoi
+    <div style="position:relative; width: 300px; height: 300px;">
+      <polar :item="n" v-bind="polarProps" v-for="n in polarProps.segments" :key="n">
+        <div :style="{
+          borderRadius: '50%',
+          backgroundColor: 'black',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }">
+          <p>{{n}}</p>
+        </div>
+      </polar>
     </div>
   </div>
 </template>
@@ -86,7 +99,22 @@ import IconPauze from './icons/IconPauze.vue'
 import IconPomodoro from './icons/IconPomodoro.vue'
 
 export default {
+  data(){
+    return {
+    settingDialProps: {
+        segments: 5, 
+        zeroAngle: 270, 
+        offset: '100px', 
+      },
+    }
+  },
   created() {
+    this.polarProps = {
+      segments: 12,
+      zeroAngle: 270,
+      offset: '100px',
+    };
+    let setDial = this.settingDialProps;
     this.audio = new Audio(require('../assets/beep.mp3'));
     this.timers = {
       [WORK]: {
@@ -104,7 +132,7 @@ export default {
         message: "Let's get to work!",
         color: 'red'
       },
-    }
+    };
   },
   mounted() {
     this.$refs.circle.set(this.elapsedSeconds/this.totalSeconds);
