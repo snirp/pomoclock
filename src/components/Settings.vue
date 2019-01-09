@@ -27,6 +27,10 @@ import {WORK, LONG, SHORT} from '../constants'
 
 export default {
   mixins: [timerMixin],
+  beforeCreate() {
+    console.log('Nothing gets called before me!')
+    this.$store.commit('stopTimer');
+  },
   methods: {
     // Common method to new value for: work / short / long 
     setMinute(value, timer){

@@ -7,41 +7,53 @@
         <div class="item-digital"  v-html="formatMinutesAndSeconds(secondsLeft)"></div>
          <div class="item-toggle">
           <button @click="pauze" v-if="interval">
-            <icon-base><icon-pauze/></icon-base>
+            <icon-base><icon-pauze name="Pauze"/></icon-base>
           </button>
           <button @click="start" v-else>
             <icon-base name="Play"><icon-play/></icon-base>
           </button>
         </div>
         <div class="item-settings flex-center">
-          <router-link to="/settings"><icon-base width="7vmin" height="7vmin"><icon-settings/></icon-base></router-link>
-          <div class="round polar deg0  flex-center work-dial">{{getWork()}}</div>
-          <div class="round polar deg1-5 flex-center short-dial">{{getShort()}}</div>
-          <div class="round polar deg2-5 flex-center long-dial">{{getLong()}}</div>
-          <div class="polar deg3-5 flex-center pomo-dial">
-            <div class="rel flex-center">
-              {{sessionCount}}
-              <div class="abs-cover">
-                <icon-base fill="darkgray"><icon-pomodoro/></icon-base>
-              </div>
-            </div>
-          </div>
-          <div class="polar deg4-5 flex-center pomo-dial">
-            <div class="rel flex-center">
-              *{{batchSize}}
-              <div class="abs-cover">
-                <icon-base fill="darkgray"><icon-pomodoro/></icon-base>
-              </div>
-            </div>
-          </div>
+          <router-link to="/settings" class="settings-link">
+            <icon-base name="Settings" width="7vmin" height="7vmin"><icon-settings/></icon-base>
+          </router-link>
+          <polar 
+            :angle="-90" 
+            v-bind="polarPropsObj" 
+            :customstyles="Object.assign({border: '0.2vmin solid green', borderRadius: '50%'},polarPropsObj.customstyles)"
+          >
+            {{getWork()}}
+          </polar>
+          <polar 
+            :angle="1/5*360-90"
+            v-bind="polarPropsObj" 
+            :customstyles="Object.assign({border: '0.2vmin solid orange', borderRadius: '50%'},polarPropsObj.customstyles)"
+          >
+            {{getShort()}}
+          </polar>
+          <polar 
+            :angle="4/5*360-90" 
+            v-bind="polarPropsObj" 
+            :customstyles="Object.assign({border: '0.2vmin solid red', borderRadius: '50%'},polarPropsObj.customstyles)"
+          >
+            {{getLong()}}
+          </polar>
+          <polar :angle="2/5*360-90" v-bind="polarPropsObj">
+            <div class="abs-cover"><icon-base name="Sessions" fill="'#333'"><icon-pomodoro-line/></icon-base></div>
+            {{sessionCount}}
+          </polar>
+          <polar :angle="3/5*360-90" v-bind="polarPropsObj">
+            <div class="abs-cover"><icon-base name="Batch size" fill="'#333'"><icon-pomodoro-line/></icon-base></div>
+            [{{batchSize}}]
+          </polar>
         </div>
       </div>
       <div class="small-dial notify-dial">
         <div class="rel flex-center">
           <progress-bar class="abs-cover" type="circle" ref="notifydial" :options="{color: 'dodgerblue', strokeWidth: 3}" />
           <button @click="toggleSound">
-            <icon-base v-if="playSound" width="7vmin" height="7vmin"><icon-volume/></icon-base>
-            <icon-base v-else width="7vmin" height="7vmin"><icon-mute/></icon-base>
+            <icon-base v-if="playSound" name="Turn off" width="7vmin" height="7vmin"><icon-volume/></icon-base>
+            <icon-base v-else name="Turn on" width="7vmin" height="7vmin"><icon-mute/></icon-base>
           </button>
         </div>
       </div>
@@ -49,7 +61,7 @@
         <div class="rel flex-center">
           <counter class="abs-cover" :dashCount="sessionCount" :activeCount="sessionsCompleted+1"/>
           <button @click="reset">
-            <icon-base width="7vmin" height="7vmin"><icon-reset/></icon-base>
+            <icon-base name="Reset" width="7vmin" height="7vmin"><icon-reset/></icon-base>
           </button>
         </div>
       </div>
@@ -72,6 +84,7 @@ import IconVolume from './icons/IconVolume.vue'
 import IconPlay from './icons/IconPlay.vue'
 import IconPauze from './icons/IconPauze.vue'
 import IconPomodoro from './icons/IconPomodoro.vue'
+import IconPomodoroLine from './icons/IconPomodoroLine.vue'
 
 export default {
   created() {
@@ -94,6 +107,16 @@ export default {
         color: 'red'
       },
     };
+    this.polarPropsObj = {
+      width: '30%',
+      height: '30%',
+      offset: '100%',
+      customstyles: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }
+    };
   },
   mounted() {
     this.$refs.circle.set(this.elapsedSeconds/this.totalSeconds);
@@ -110,7 +133,8 @@ export default {
     IconVolume, 
     IconPlay, 
     IconPauze, 
-    IconPomodoro
+    IconPomodoro,
+    IconPomodoroLine,
   },
   computed: {
     totalSeconds(){
@@ -192,6 +216,10 @@ export default {
 </script>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
+
 button {
   border: none;
   background-color: transparent;
@@ -199,9 +227,16 @@ button {
   padding: 0;
   margin: 0;
   color: inherit;
+  z-index: 99;
 }
 button:hover{
   cursor:pointer;
+}
+button, a {
+  transition: color 0.3s ease-in-out;
+}
+button:hover, a:hover{
+  color: #222;
 }
 a {
   color: inherit;
@@ -210,6 +245,10 @@ a {
   max-width: 90vmin;
   margin: 5vmin auto 0;
   position: relative;
+  background-color: #fdfdfd;
+  border-radius: 50%;
+  padding: 1.5vmin;
+  box-shadow: 0 5px 40px rgba(0,0,0,0.20), 0 7px 24px rgba(0,0,0,0.15);
 }
 .face-center{
   position: absolute;
@@ -235,23 +274,9 @@ a {
 .reset-dial {
   right: 10%;
 }
-.polar {
-  position: absolute;
-  top: 50%; 
-  left: 50%;
-  width: 30%; 
-  height: 30%;
-  margin: -15%;
-}
 .round {
   border-radius: 50%; 
 }
-.deg0 { transform: translate(100%); }
-.deg1-5 { transform: rotate(72deg) translate(100%) rotate(-72deg); }
-.deg2-5 { transform: rotate(144deg) translate(100%) rotate(-144deg); }
-.deg3-5 { transform: rotate(216deg) translate(100%) rotate(-216deg); }
-.deg4-5 { transform: rotate(288deg) translate(100%) rotate(-288deg); }
-
 .flex-center{
   display: flex;
   justify-content: center;
@@ -280,7 +305,7 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: 1;
 }
 .item-name {
   margin-top: 20%;
@@ -288,6 +313,7 @@ a {
 }
 .item-digital {
   font-size: 8vmin;
+  font-weight: 300;
 }
 .item-toggle svg {
   height: 12vmin;
@@ -304,5 +330,14 @@ a {
   border-radius: 50%;
   font-size: 4vmin;
   margin-bottom: 3%;
+}
+.settings-link {
+  transition: transform .5s ease-in-out;
+}
+svg {
+  vertical-align: middle;
+}
+.settings-link:hover {
+  transform: rotate(270deg)
 }
 </style>
