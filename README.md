@@ -1,4 +1,8 @@
-# pomoclock
+# POMOCLOCK
+
+Pomodoro timer found on [pomoclock.com](http://pomoclock.com). Preferences and current state are 
+saved to the browser. Timer can be run in background and sends configurable audio or browser 
+notifications.
 
 ## Project setup
 ```
@@ -15,15 +19,10 @@ npm run serve
 npm run build
 ```
 
-### Run your tests
-```
-npm run test
-```
+# Bugs and feature requests
 
-### Lints and fixes files
-```
-npm run lint
-```
+Please report bugs to: [github.com/snirp/pomoclock/issues](https://github.com/snirp/pomoclock/issues).
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# License
+
+MIT
