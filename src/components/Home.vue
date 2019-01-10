@@ -90,12 +90,10 @@ import IconSettings from './icons/IconSettings.vue'
 import IconVolume from './icons/IconVolume.vue'
 import IconPlay from './icons/IconPlay.vue'
 import IconPauze from './icons/IconPauze.vue'
-import IconPomodoro from './icons/IconPomodoro.vue'
 import IconPomodoroLine from './icons/IconPomodoroLine.vue'
 
 export default {
   created() {
-    let setDial = this.settingDialProps;
     this.audio = new Audio(require('../assets/beep.mp3'));
     this.timers = {
       [WORK]: {
@@ -139,8 +137,7 @@ export default {
     IconSettings, 
     IconVolume, 
     IconPlay, 
-    IconPauze, 
-    IconPomodoro,
+    IconPauze,
     IconPomodoroLine,
   },
   computed: {
@@ -175,7 +172,7 @@ export default {
         return '&nbsp;'+time
       } else {
         return time
-      };
+      }
     },
     notifyBrowser(message) {
       if (Notification.permission === "granted") {
@@ -194,24 +191,24 @@ export default {
     getWork(){ return this[WORK];},
     getLong(){ return this[LONG];},
     getShort(){ return this[SHORT];},
-    toggleSound(e){
+    toggleSound(){
       this.playSound = !this.playSound;
     },
-    pauze(e){
+    pauze(){
       this.$store.commit('stopTimer');
     },
-    reset(e){
+    reset(){
       this.resetTimer();
     },
-    start(e){
+    start(){
       this.$store.dispatch('intervalAsync', this.countDown)
     },
     notify(timer){
-      this.notifyBrowser(this.timers[this.activeTimer].message);
+      this.notifyBrowser(this.timers[timer].message);
       if (this.playSound) {
         this.audio.volume = this.volume/100;
         this.audio.play();
-      };
+      }
     },
     countDown(){
       this.$store.commit('decrement');
