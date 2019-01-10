@@ -1,22 +1,68 @@
 <template>
   <div>
-    <router-link to="/">Clock</router-link>
-    <p>Work minutes: {{work}}</p>
-    <vue-slider v-model="work" v-bind="{min: 1, max: 60, tooltip: false}"/>
-    <p>Short break minutes</p>
-    <vue-slider v-model="shortBreak" v-bind="{min: 1, max: 15, tooltip: false}"/>
-    <p>Long break minutes</p>
-    <vue-slider v-model="longBreak" v-bind="{min: 1, max: 45, tooltip: false}"/>
-    <hr />
-    <p>Session count</p>
-    <vue-slider v-model="sessionCount" v-bind="{min: 1, max: 20, tooltip: false}"/>
-    <p>Long break after</p>
-    <vue-slider v-model="batchSize" v-bind="{min: 1, max: 10, tooltip: false}"/>
-    <hr />
-    <p>Sounds</p>
-    <toggle-button v-model="playSound"/>
-    <p>Volume</p>
-    <vue-slider v-model="volume" v-bind="{min: 0, max: 10, tooltip: false}"/>
+    <div class="top-bar">
+      <router-link to="/" class="icon-link">
+        <icon-base name="Close"><icon-close/></icon-base>
+      </router-link>
+    </div>
+    <div class="menu">
+
+      <div class="settings-item">
+        <div class="item-header">
+          <p>Work time</p>
+          <p>{{work}} minutes</p>
+        </div>
+        <vue-slider v-model="work" v-bind="{min: 1, max: 60, tooltip: false}"/>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-header">
+          <p>Short break</p>
+          <p>{{shortBreak}} minutes</p>
+        </div>
+        <vue-slider v-model="shortBreak" v-bind="{min: 1, max: 15, tooltip: false}"/>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-header">
+          <p>Long break</p>
+          <p>{{longBreak}} minutes</p>
+        </div>
+        <vue-slider v-model="longBreak" v-bind="{min: 1, max: 45, tooltip: false}"/>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-header">
+          <p>Total pomodoros</p>
+          <p>{{sessionCount}} sessions</p>
+        </div>
+        <vue-slider v-model="sessionCount" v-bind="{min: 1, max: 20, tooltip: false}"/>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-header">
+          <p>Long break after</p>
+          <p>{{batchSize}} sessions</p>
+        </div>
+        <vue-slider v-model="batchSize" v-bind="{min: 1, max: 10, tooltip: false}"/>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-header">
+          <p>Sounds</p>
+          <p><toggle-button v-model="playSound"/></p>
+        </div>
+      </div>
+
+      <div class="settings-item">
+        <div class="item-header">
+          <p>Volume</p>
+          <p>{{volume}} %</p>
+        </div>
+        <vue-slider v-model="volume" v-bind="{min: 0, max: 100, interval: 5, tooltip: false}"/>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -24,11 +70,12 @@
 import vueSlider from 'vue-slider-component'
 import timerMixin from '../mixins/timerMixin'
 import {WORK, LONG, SHORT} from '../constants'
+import IconBase from './IconBase.vue'
+import IconClose from './icons/IconClose.vue'
 
 export default {
   mixins: [timerMixin],
   beforeCreate() {
-    console.log('Nothing gets called before me!')
     this.$store.commit('stopTimer');
   },
   methods: {
@@ -108,9 +155,36 @@ export default {
   },
   components: {
     vueSlider,
+    IconBase,
+    IconClose,
   }
 }
 </script>
 
 <style>
+a {
+  color: inherit;
+}
+.top-bar {
+  text-align: right;
+  padding: 10px 2%;
+}
+.menu {
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.settings-item {
+  margin-bottom: 2rem;
+}
+.item-header {
+  margin: 0 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.icon-link {
+  display: inline-block;
+  width: 6vmin;
+  height: 6vmin;
+}
 </style>

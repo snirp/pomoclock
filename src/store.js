@@ -20,26 +20,26 @@ const store = new Vuex.Store({
     [WORK]: 25,
     [SHORT]: 5,
     [LONG]: 15,
-    // Initial value of seconds left (derived from WORK)
-    // TODO: set to null initially and initialize with proper value if unset
-    secondsLeft: 25*60,
+    // Initial value of seconds left (set on initializeStore)
+    secondsLeft: undefined,
     // Incremented when worktimer is finished
     sessionsCompleted: 0,
     // Interval ID of current timer (allowing it to be cleared)
     interval: null,
     playSound: true,
-    // Between 0 and 10
-    volume: 2,
+    // Between 0 and 100
+    volume: 80,
   },
   actions: {
     intervalAsync ({ commit }, func ) {
       commit('initInterval', setInterval(() => {
         func();
-      }, 20))
+      }, 1000))
     }
   },
   mutations: {
 		initializeStore(state) {
+      state.secondsLeft = state.work*60;
 			if(localStorage.getItem('store')) {
         const store = JSON.parse(localStorage.getItem('store'));
         if(store.version == state.version) this.replaceState(Object.assign(state, store));
@@ -77,6 +77,5 @@ const store = new Vuex.Store({
 store.subscribe((mutation, state) => {
 	localStorage.setItem('store', JSON.stringify(state));
 });
-
 
 export default store;

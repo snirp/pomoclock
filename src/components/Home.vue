@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="container">
     <div class="face">
       <progress-bar type="circle" ref="circle" :options="{color: 'dodgerblue', strokeWidth: 0.7}"></progress-bar>
       <div class="face-center">
         <div class="item-name">{{timers[activeTimer].display}}</div>
         <div class="item-digital"  v-html="formatMinutesAndSeconds(secondsLeft)"></div>
-         <div class="item-toggle">
+          <div class="item-toggle">
           <button @click="pauze" v-if="interval">
             <icon-base><icon-pauze name="Pauze"/></icon-base>
           </button>
@@ -14,8 +14,8 @@
           </button>
         </div>
         <div class="item-settings flex-center">
-          <router-link to="/settings" class="settings-link">
-            <icon-base name="Settings" width="7vmin" height="7vmin"><icon-settings/></icon-base>
+          <router-link to="/settings" class="settings-link icon-link">
+            <icon-base name="Settings"><icon-settings/></icon-base>
           </router-link>
           <polar 
             :angle="-90" 
@@ -39,11 +39,11 @@
             {{getLong()}}
           </polar>
           <polar :angle="2/5*360-90" v-bind="polarPropsObj">
-            <div class="abs-cover"><icon-base name="Sessions" fill="'#333'"><icon-pomodoro-line/></icon-base></div>
+            <div class="abs-back"><icon-base name="Sessions" fill="'#333'"><icon-pomodoro-line/></icon-base></div>
             {{sessionCount}}
           </polar>
           <polar :angle="3/5*360-90" v-bind="polarPropsObj">
-            <div class="abs-cover"><icon-base name="Batch size" fill="'#333'"><icon-pomodoro-line/></icon-base></div>
+            <div class="abs-back"><icon-base name="Batch size" fill="'#333'"><icon-pomodoro-line/></icon-base></div>
             [{{batchSize}}]
           </polar>
         </div>
@@ -51,17 +51,17 @@
       <div class="small-dial notify-dial">
         <div class="rel flex-center">
           <progress-bar class="abs-cover" type="circle" ref="notifydial" :options="{color: 'dodgerblue', strokeWidth: 3}" />
-          <button @click="toggleSound">
-            <icon-base v-if="playSound" name="Turn off" width="7vmin" height="7vmin"><icon-volume/></icon-base>
-            <icon-base v-else name="Turn on" width="7vmin" height="7vmin"><icon-mute/></icon-base>
+          <button @click="toggleSound" class="icon-link">
+            <icon-base v-if="playSound" name="Turn off"><icon-volume/></icon-base>
+            <icon-base v-else name="Turn on"><icon-mute/></icon-base>
           </button>
         </div>
       </div>
       <div class="small-dial reset-dial">
         <div class="rel flex-center">
           <counter class="abs-cover" :dashCount="sessionCount" :activeCount="sessionsCompleted+1"/>
-          <button @click="reset">
-            <icon-base name="Reset" width="7vmin" height="7vmin"><icon-reset/></icon-base>
+          <button @click="reset" class="icon-link">
+            <icon-base name="Reset"><icon-reset/></icon-base>
           </button>
         </div>
       </div>
@@ -120,7 +120,7 @@ export default {
   },
   mounted() {
     this.$refs.circle.set(this.elapsedSeconds/this.totalSeconds);
-    this.$refs.notifydial.set(this.volume/10);
+    this.$refs.notifydial.set(this.volume/100);
   },
   mixins: [timerMixin],
   components: {
@@ -174,7 +174,9 @@ export default {
       if (Notification.permission === "granted") {
         new Notification(message);
       } else if (Notification.permission !== "denied") {
-        Notification.requestPermission().then(function (permission) {
+        this.pauze();
+        Notification.requestPermission().then((permission) => {
+          this.start();
           if (permission === "granted") {
             new Notification(message);
           }
@@ -200,7 +202,7 @@ export default {
     notify(timer){
       this.notifyBrowser(this.timers[this.activeTimer].message);
       if (this.playSound) {
-        this.audio.volume = this.volume/10;
+        this.audio.volume = this.volume/100;
         this.audio.play();
       };
     },
@@ -216,10 +218,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
-
 button {
   border: none;
   background-color: transparent;
@@ -241,11 +239,16 @@ button:hover, a:hover{
 a {
   color: inherit;
 }
+.container{
+  height: 100vh;
+  width: 100%;
+  display: flex;
+}
 .face {
-  max-width: 90vmin;
-  margin: 5vmin auto 0;
+  width: 90vmin;
+  margin: auto;
   position: relative;
-  background-color: #fdfdfd;
+  background-color: #fbfbfb;
   border-radius: 50%;
   padding: 1.5vmin;
   box-shadow: 0 5px 40px rgba(0,0,0,0.20), 0 7px 24px rgba(0,0,0,0.15);
@@ -307,6 +310,14 @@ a {
   height: 100%;
   z-index: 1;
 }
+.abs-back{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
 .item-name {
   margin-top: 20%;
   font-size: 4vmin;
@@ -331,13 +342,12 @@ a {
   font-size: 4vmin;
   margin-bottom: 3%;
 }
-.settings-link {
-  transition: transform .5s ease-in-out;
-}
 svg {
   vertical-align: middle;
 }
-.settings-link:hover {
-  transform: rotate(270deg)
+.icon-link {
+  display: inline-block;
+  width: 7vmin;
+  height: 7vmin;
 }
 </style>
