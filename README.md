@@ -19,6 +19,10 @@ npm run serve
 npm run build
 ```
 
+# Technology
+
+This was created with Vue and has no backend dependencies. 
+
 # Bugs and feature requests
 
 Please report bugs to: [github.com/snirp/pomoclock/issues](https://github.com/snirp/pomoclock/issues).
