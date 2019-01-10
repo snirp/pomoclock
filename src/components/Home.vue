@@ -14,7 +14,7 @@
         <div class="item-digital"  v-html="formatMinutesAndSeconds(secondsLeft)"></div>
           <div class="item-toggle">
           <button @click="pauze" v-if="interval">
-            <icon-base><icon-pauze name="Pauze"/></icon-base>
+            <icon-base name="Pauze"><icon-pauze/></icon-base>
           </button>
           <button @click="start" v-else>
             <icon-base name="Play"><icon-play/></icon-base>
@@ -93,6 +93,13 @@ import IconPauze from './icons/IconPauze.vue'
 import IconPomodoroLine from './icons/IconPomodoroLine.vue'
 
 export default {
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.$store.state.autoRun){
+        vm.start();
+      }
+    })
+  },
   created() {
     this.audio = new Audio(require('../assets/beep.mp3'));
     this.timers = {

@@ -76,7 +76,7 @@ import IconClose from './icons/IconClose.vue'
 export default {
   mixins: [timerMixin],
   beforeCreate() {
-    this.$store.commit('stopTimer');
+    this.$store.commit('pauzeTimer');
   },
   methods: {
     // Common method to new value for: work / short / long 

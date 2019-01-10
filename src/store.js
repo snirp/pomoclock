@@ -29,9 +29,11 @@ const store = new Vuex.Store({
     playSound: true,
     // Between 0 and 100
     volume: 80,
+    autoRun: false,
   },
   actions: {
     intervalAsync ({ commit }, func ) {
+      commit('autoRun');
       commit('initInterval', setInterval(() => {
         func();
       }, 1000))
@@ -60,9 +62,17 @@ const store = new Vuex.Store({
     incrementSessions(state){
       ++state.sessionsCompleted;
     },
+    pauzeTimer(state){
+      clearInterval(state.interval);
+      state.interval = null;
+    },
     stopTimer(state){
       clearInterval(state.interval);
       state.interval = null;
+      state.autoRun = false;
+    },
+    autoRun(state){
+      state.autoRun = true;
     },
     initiateTimer(state){
       state.activeTimer = WORK;
