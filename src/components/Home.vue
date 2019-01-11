@@ -129,6 +129,7 @@ export default {
         alignItems: 'center'
       }
     };
+    this.timestap = undefined; // debug
   },
   mounted() {
     this.$refs.circle.set(this.elapsedSeconds/this.totalSeconds);
@@ -209,6 +210,7 @@ export default {
     },
     start(){
       this.$store.dispatch('intervalAsync', this.countDown)
+      this.timestamp = new Date();
     },
     notify(timer){
       this.notifyBrowser(this.timers[timer].message);
@@ -220,6 +222,11 @@ export default {
     countDown(){
       this.$store.commit('decrement');
       if (this.secondsLeft <= 0){
+        /* debug */
+        let newTimestamp = new Date(); 
+        console.log(`Time difference for ${this.activeTimer} session: ${(newTimestamp-this.timestamp)-this.$store.state[this.activeTimer]*60*1000}`);
+        this.timestamp = newTimestamp;
+        /* debug */
         this.notify(this.activeTimer);
         this.switchTimer();
       }
