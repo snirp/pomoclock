@@ -4,34 +4,15 @@
     <git-corner href="https://github.com/snirp/pomoclock" size="10vmin"/>
     <div class="face">
       <circle-counter 
-        :stroke-width="2" 
-        :active-width="2" 
+        :stroke-width="1" 
+        :active-width="1" 
         :dash-spacing="0"
         :dash-count="totalSeconds"
         :active-count="elapsedSeconds"
-        :active-stroke="timers[$store.state.activeTimer].color"
+        :active-stroke="TIMERS[activeTimer].color"
       />
-      <div class="ROUTER-CONTENT">
-        <div class="center-column">
-          <div>{{timers[$store.state.activeTimer].display}}</div>
-          <div>{{formatMinutesAndSeconds(secondsLeft)}}</div>
-          <div>next</div>
-        </div>
-        <router-link to="">
-          <polar v-bind="this.iconPropsObj" :angle="-50">@</polar>
-          <polar v-bind="this.dialPropsObj" :angle="-50">{{getLong()}}</polar>
-        </router-link>
-        <polar v-bind="this.iconPropsObj" :angle="-90">@</polar>
-        <polar v-bind="this.dialPropsObj" :angle="-90">{{getWork()}}</polar>
-
-        <polar v-bind="this.iconPropsObj" :angle="-130">@</polar>
-        <polar v-bind="this.dialPropsObj" :angle="-130">{{getShort()}}</polar>
-
-        <polar v-bind="this.dialPropsObj" :angle="45">{{sessionCount}}</polar>
-        <polar v-bind="this.dialPropsObj" :angle="90">{{batchSize}}</polar>
-        <polar v-bind="this.dialPropsObj" :angle="135">{{volume}}</polar>
-        <button @click="start">start</button>
-        <button @click="reset">reset</button>
+      <div class="center-column">
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -39,62 +20,15 @@
 
 <script>
 import {version} from '../package.json';
-import {WORK, LONG, SHORT} from './constants'
+import {WORK, LONG, SHORT, TIMERS} from './constants'
 import GitCorner from '@/GitCorner.vue'
 import CircleCounter from 'vue-circle-counter'
-import Polar from 'vue-polar'
 import { mapState } from 'vuex'
 
 export default {
   created(){
-    this.audio = new Audio(require('./assets/beep.mp3'));
-    this.timers = {
-      [WORK]: {
-        display: 'work', 
-        message: "Time for a break",
-        color: 'green',
-      },
-      [SHORT]: {
-        display: 'short break', 
-        message: "Let's get to work!",
-        color: 'orange',
-      },
-      [LONG]: {
-        display: 'long break', 
-        message: "Let's get to work!",
-        color: 'red'
-      },
-    };
-    this.iconPropsObj = {
-      width: '10%',
-      height: '20%',
-      offset: '320%',
-      setstraight: false,
-      extrarotation: 90,
-      customstyles: {
-        backgroundColor: 'darkgreen',
-        borderRadius: '999rem',
-        paddingTop: '10%',
-        textAlign: 'center',
-        color: 'white',
-        fontSize: '6vmin',
-      }
-    };
-    this.dialPropsObj = {
-      height: '14%',
-      width: '14%',
-      offset: '265%',
-      customstyles: {
-        backgroundColor: 'darkgreen',
-        borderRadius: '50%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: 'white',
-        fontSize: '6vmin',
-        fontWeight: 400,
-      }
-    }
+    this.TIMERS = TIMERS
+    this.audio = new Audio(require('@/assets/beep.mp3'));
   },
   data(){
     return {
@@ -102,18 +36,25 @@ export default {
     }
   },
   computed: {
+    playSound: {
+      get(){ 
+        return this.$store.state.playSound;
+      },
+      set(value){
+        this.$store.commit('updateValue', {name: 'playSound', value})
+      }
+    },
     totalSeconds(){
-      return this.$store.state[this.$store.state.activeTimer] * 60;
+      return this[this.activeTimer] * 60;
     },
     elapsedSeconds(){
-      return this.totalSeconds - this.$store.state.secondsLeft;
+      return this.totalSeconds - this.secondsLeft;
     },
     ...mapState([
-      'secondsLeft', 
-      'activeTimer', 
+      'secondsLeft',
+      'activeTimer',
       'sessionsCompleted', 
-      'volume', 
-      'interval', 
+      'volume',
       'sessionCount', 
       'batchSize',
       SHORT,
@@ -130,7 +71,7 @@ export default {
       }
     },
     notify(timer){
-      this.notifyBrowser(this.timers[timer].message);
+      this.notifyBrowser(this.TIMERS[timer].message);
       if (this.playSound) {
         this.audio.volume = this.volume/100;
         this.audio.play();
@@ -150,15 +91,15 @@ export default {
       }
     },
     switchTimer(){
-      if (this.$store.state.activeTimer !== WORK) {
+      if (this.activeTimer !== WORK) {
         this.$store.commit('setActive', WORK);
       } else {
         this.$store.commit('incrementSessions');
-        if (this.$store.state.sessionsCompleted == this.$store.state.sessionCount){
+        if (this.sessionsCompleted == this.sessionCount){
           this.resetTimer();
           return null;
         }
-        if (this.$store.state.sessionsCompleted % this.$store.state.batchSize == 0) {
+        if (this.sessionsCompleted % this.batchSize == 0) {
           this.$store.commit('setActive', LONG);
         } else {
           this.$store.commit('setActive', SHORT);
@@ -178,21 +119,13 @@ export default {
       this.$store.commit('initiateTimer');
       this.$store.commit('resetSeconds');      
     },
-    getWork(){ return this[WORK];},
-    getLong(){ return this[LONG];},
-    getShort(){ return this[SHORT];},
-    formatMinutesAndSeconds(seconds){
-      return Math.floor(seconds/60)+':'+('0'+seconds % 60).slice(-2)
-    },
   },
   components: {
     GitCorner,
     CircleCounter,
-    Polar,
   },
 }
 </script>
-
 
 <style>
 * {
@@ -223,15 +156,12 @@ body {
   height: 90vmin;
   margin: auto;
   position: relative;
-  background-color: #f5f5f5;
   border-radius: 50%;
-  padding: 1vmin;
-  box-shadow: 0 5px 40px rgba(0,0,0,0.20), 0 7px 24px rgba(0,0,0,0.15);
 }
 .center-column{
   position: absolute;
   top: 0;
-  width: 60%;
+  width: 100%;
   height: 100%;
   left: 50%;
   transform: translateX(-50%);

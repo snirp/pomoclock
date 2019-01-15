@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './components/Home.vue'
-import Settings from './components/Settings.vue'
+import Face from '@/Face.vue'
+import Settings from '@/Settings.vue'
 
 Vue.use(Router)
 
@@ -9,11 +9,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home,
+      name: 'face',
+      component: Face,
     },
     {
-      path: '/settings',
+      path: '/settings/:name',
       name: 'settings',
       component: Settings
     },
