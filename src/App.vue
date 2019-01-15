@@ -96,7 +96,7 @@ export default {
       } else {
         this.$store.commit('incrementSessions');
         if (this.sessionsCompleted == this.sessionCount){
-          this.resetTimer();
+          this.reset();
           return null;
         }
         if (this.sessionsCompleted % this.batchSize == 0) {
