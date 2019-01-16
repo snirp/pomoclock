@@ -44,7 +44,8 @@ const store = new Vuex.Store({
       state.secondsLeft = state.work*60;
 			if(localStorage.getItem('store')) {
         const store = JSON.parse(localStorage.getItem('store'));
-        if(store.version == state.version) this.replaceState(Object.assign(state, store));
+        // Local cache is valid for same major versions
+        if(store.version.split('.')[0] == state.version.split('.')[0]) this.replaceState(Object.assign(state, store));
       }
     },
     updateValue(state, n) {

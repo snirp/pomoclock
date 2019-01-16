@@ -1,18 +1,48 @@
 <template>
-  <div class="center-column">
-
-    <div class="time-row">
-      <button @click="$parent.toggleSound" class="icon-link">
-        <icon v-if="playSound" :paths="icons['volume']" title="turn off" fill="currentColor" size="100%" />
-        <icon v-else :paths="icons['mute']" title="turn on" fill="currentColor" size="100%" />
-      </button>
+  <div>
+    <div class="center-row">
+      <div class="button-container">
+        <div class="behind-button">
+          <arc-counter 
+            size="100%" 
+            :start="-225" 
+            :end="45" 
+            :dashCount="10" 
+            :activeCount="volume"
+            :strokeWidth="8"
+            :activeWidth="8"
+            :dashSpacing="0"
+            :activeStroke="getActiveStroke()"
+          />
+        </div>
+        <button @click="$parent.toggleSound" class="icon-link">
+          <icon v-if="playSound" :paths="icons['volume']" title="turn off" fill="currentColor" size="100%" />
+          <icon v-else :paths="icons['mute']" title="turn on" fill="currentColor" size="100%" />
+        </button>
+      </div>
       <h1>{{formatMinutesAndSeconds(secondsLeft)}}</h1>
-      <button @click="$parent.reset" v-if="interval">
-        <icon :paths="icons['reset']" title="reset timer" fill="currentColor" size="100%" />
-      </button>
-      <button @click="$parent.start" v-else>
-        <icon :paths="icons['play']" title="start timer" fill="currentColor" size="100%" />
-      </button>
+      <div class="button-container">
+        <template v-if="interval">
+          <div class="behind-button">
+            <arc-counter 
+              size="100%" 
+              :start="225" 
+              :end="-45" 
+              :dashCount="sessionCount" 
+              :activeCount="sessionsCompleted+1"
+              :strokeWidth="8"
+              :activeWidth="8"
+              activeStroke="dodgerblue"
+            />
+          </div>
+          <button @click="$parent.reset" >
+            <icon :paths="icons['reset']" title="reset timer" fill="currentColor" size="100%" />
+          </button>
+        </template>
+        <button @click="$parent.start" class="button-play" v-else>
+          <icon :paths="icons['play']" title="start timer" fill="currentColor" size="100%" />
+        </button>
+      </div>
     </div>
 
     <router-link v-for="dial in dials" :key="dial.position" :to="{ name: 'settings', params: { name: dial.name }}">
@@ -45,6 +75,7 @@
 import {WORK, LONG, SHORT, TIMERS} from './constants';
 import { mapState } from 'vuex';
 import Polar from 'vue-polar';
+import ArcCounter from 'vue-arc-counter';
 
 import icons from '@/customIcons'
 import Icon from './Icon';
@@ -73,7 +104,7 @@ export default {
       },
       {
         position: -3,
-        name: WORK,
+        name: LONG,
         value: this.getLong(),
         color: this.TIMERS[LONG].color,
         icon: 'coffee-large'
@@ -82,21 +113,21 @@ export default {
         position: 1,
         name: 'sessionCount',
         value: this.sessionCount,
-        color: 'gray',
+        color: '#666',
         icon: 'pomodoro'
       },
       {
         position: 2,
         name: 'batchSize',
         value: this.batchSize,
-        color: 'gray',
+        color: '#666',
         icon: 'pomany'
       },
       {
         position: 3,
         name: 'volume',
         value: this.volume,
-        color: 'gray',
+        color: '#666',
         icon: 'volume'
       }
     ];
@@ -124,6 +155,12 @@ export default {
     getWork(){ return this[WORK];},
     getLong(){ return this[LONG];},
     getShort(){ return this[SHORT];},
+    getActiveStroke(){
+      if (this.playSound){
+        return 'dodgerblue';
+      }
+      return 'grey';
+    },
     getAngle(){
       switch(this.activeTimer) {
         case this.WORK:
@@ -135,19 +172,24 @@ export default {
       }
     }
   },
-  components: {Polar, Icon}
+  components: {Polar, Icon, ArcCounter}
 }
 </script>
 
 <style>
-.time-row{
+.center-row{
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  width: 80%;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 h1 {
-  font-weight: 200;
+  font-weight: 300;
   margin: 2vmin 0;
   font-size: 8vmin;
 }
@@ -171,10 +213,32 @@ button {
   margin: 0;
   color: inherit;
   z-index: 99;
-  width: 8vmin;
-  height: 8vmin;
+  width: 6vmin;
+  height: 6vmin;
+  transition: color 0.3s;
+}
+.button-play{
+  width: 80%;
+  height: 80%;
 }
 button:hover{
-  cursor:pointer;
+  cursor: pointer;
+  color: #333;
+}
+.button-container {
+  position: relative;
+  width: 16%;
+  height: 16%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.behind-button{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 </style>

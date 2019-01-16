@@ -4,19 +4,13 @@ export const LONG = 'longBreak';
 
 export const TIMERS = {
   [WORK]: {
-    display: 'work', 
-    message: "Time for a break",
-    color: 'green',
+    color: '#008000',
   },
   [SHORT]: {
-    display: 'short break', 
-    message: "Let's get to work!",
-    color: 'orange',
+    color: '#ffa500',
   },
   [LONG]: {
-    display: 'long break', 
-    message: "Let's get to work!",
-    color: 'red'
+    color: '#ff0000',
   },
 };
 
@@ -29,8 +23,8 @@ export const SETTINGS = {
     step: 1,
   },
   'batchSize': {
-    title: 'Number of sessions between long breaks',
-    min: 1,
+    title: 'Sessions between long breaks',
+    min: 2,
     max: 10,
     step: 1,
   },

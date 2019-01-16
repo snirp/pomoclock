@@ -1,15 +1,21 @@
 <template>
   <div class="center-column">
-    <div>{{model}}</div>
+    <div class="value">{{model}}</div>
     <div>{{ setting.title }}</div>
-    <vue-slider 
-      v-model="model" 
-      :min="setting.min"
-      :max="setting.max"
-      :interval="setting.step"
-      :tooltip="false"
-    />
-    <router-link :to="{ name: 'face'}">X</router-link>
+    <div class="slider">
+      <vue-slider 
+        v-model="model" 
+        :min="setting.min"
+        :max="setting.max"
+        :interval="setting.step"
+        :tooltip="false"
+      />
+    </div>
+    <div class="icon">
+      <router-link :to="{ name: 'face'}">
+        <icon :paths="icons['close']" title="close" fill="currentColor" size="100%" />
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -17,10 +23,14 @@
 import { WORK, LONG, SHORT, SETTINGS } from '@/constants'
 import vueSlider from 'vue-slider-component'
 
+import icons from '@/customIcons'
+import Icon from './Icon';
+
 export default {
   created() {
     this.name = this.$route.params.name;
     this.setting = SETTINGS[this.name];
+    this.icons = icons
   },
   computed: {
     model: {
@@ -65,6 +75,44 @@ export default {
       this.$store.commit('updateValue', {name:this.name, value})      
     }
   },
-  components: {vueSlider}
+  components: {vueSlider, Icon}
 }
 </script>
+
+<style scoped>
+.center-column{
+  position: absolute;
+  top: 10%;
+  width: 100%;
+  height: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 4vmin;
+}
+
+.value {
+  font-size: 2rem;
+}
+
+.slider{
+  width: 80%;
+}
+
+.icon {
+  height: 8vmin;
+  width: 8vmin;
+}
+
+a {
+  color: inherit;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: #333;
+}
+</style>

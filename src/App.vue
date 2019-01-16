@@ -4,8 +4,8 @@
     <git-corner href="https://github.com/snirp/pomoclock" size="10vmin"/>
     <div class="face">
       <circle-counter 
-        :stroke-width="1" 
-        :active-width="1" 
+        :stroke-width="1.5" 
+        :active-width="1.5" 
         :dash-spacing="0"
         :dash-count="totalSeconds"
         :active-count="elapsedSeconds"
@@ -22,6 +22,7 @@ import {WORK, LONG, SHORT, TIMERS} from './constants'
 import GitCorner from '@/GitCorner.vue'
 import CircleCounter from 'vue-circle-counter'
 import { mapState } from 'vuex'
+import Favico from 'favico.js'
 
 export default {
   created(){
@@ -64,6 +65,7 @@ export default {
   },
   methods: {
     countDown(){
+      if (this.secondsLeft % 60 == 0) this.favicon.badge(this.secondsLeft/60);
       this.$store.commit('decrement');
       if (this.secondsLeft <= 0){
         this.notify(this.activeTimer);
@@ -119,10 +121,20 @@ export default {
         }
       }
       this.$store.commit('resetSeconds');
+      this.favicon.reset();
+      this.favicon = new Favico({
+        type : 'rectangle',
+        animation:'slide',
+        bgColor : this.TIMERS[this.activeTimer].color,
+      });
     },
     start(){
-      console.log('clicked start')
-      this.$store.dispatch('intervalAsync', this.countDown)
+      this.$store.dispatch('intervalAsync', this.countDown);
+      this.favicon = new Favico({
+        type : 'rectangle',
+        animation:'slide',
+        bgColor: this.TIMERS[this.activeTimer].color,
+      });
     },
     pauze(){
       this.$store.commit('stopTimer');
@@ -130,7 +142,8 @@ export default {
     reset(){ 
       this.$store.commit('stopTimer');
       this.$store.commit('initiateTimer');
-      this.$store.commit('resetSeconds');      
+      this.$store.commit('resetSeconds');
+      this.favicon.reset();    
     },
     toggleSound(){
       this.playSound = !this.playSound;
@@ -174,17 +187,5 @@ body {
   position: relative;
   border-radius: 50%;
 }
-.center-column{
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 4vmin;
-}
+
 </style>
