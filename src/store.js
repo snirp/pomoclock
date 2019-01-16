@@ -27,11 +27,13 @@ const store = new Vuex.Store({
     // Interval ID of current timer (allowing it to be cleared)
     interval: null,
     playSound: true,
-    // Between 0 and 100
-    volume: 80,
+    // Between 0 and 10
+    volume: 8,
+    autoRun: false,
   },
   actions: {
     intervalAsync ({ commit }, func ) {
+      commit('autoRun');
       commit('initInterval', setInterval(() => {
         func();
       }, 1000))
@@ -67,6 +69,10 @@ const store = new Vuex.Store({
     stopTimer(state){
       clearInterval(state.interval);
       state.interval = null;
+      state.autoRun = false;
+    },
+    autoRun(state){
+      state.autoRun = true;
     },
     initiateTimer(state){
       state.activeTimer = WORK;

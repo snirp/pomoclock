@@ -11,9 +11,7 @@
         :active-count="elapsedSeconds"
         :active-stroke="TIMERS[activeTimer].color"
       />
-      <div class="center-column">
-        <router-view></router-view>
-      </div>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -29,6 +27,8 @@ export default {
   created(){
     this.TIMERS = TIMERS
     this.audio = new Audio(require('@/assets/beep.mp3'));
+    // Keep running between refreshes: only reset should kill the counter
+    if (this.$store.state.autoRun) this.start();
   },
   data(){
     return {
@@ -71,9 +71,22 @@ export default {
       }
     },
     notify(timer){
-      this.notifyBrowser(this.TIMERS[timer].message);
+      let message;
+      if (timer == WORK) {
+        if (this.sessionsCompleted + 1 == this.sessionCount){
+          message = `Well done! You finished your schedule.`
+        } else if ((this.sessionsCompleted + 1) % this.batchSize == 0){
+          message = `Time for a long break: ${this[LONG]} minutes`
+        } else {
+          message = `Take a short break: ${this[SHORT]} minutes`
+        }
+      } else {
+        message = `Time for a ${this[WORK]} minute work session!`
+      };
+      this.notifyBrowser(message);
+
       if (this.playSound) {
-        this.audio.volume = this.volume/100;
+        this.audio.volume = this.volume/10;
         this.audio.play();
       }
     },
@@ -118,6 +131,9 @@ export default {
       this.$store.commit('stopTimer');
       this.$store.commit('initiateTimer');
       this.$store.commit('resetSeconds');      
+    },
+    toggleSound(){
+      this.playSound = !this.playSound;
     },
   },
   components: {
@@ -169,5 +185,6 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-size: 4vmin;
 }
 </style>

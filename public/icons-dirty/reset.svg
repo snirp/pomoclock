@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="360px" height="360px" viewBox="0 0 360 360" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>icons-dirty/reset</title>
+    <desc>Created with Sketch.</desc>
+    <g id="reset" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M180,90 L180,180 L90,90 L180,0 L180,67.5 C260.771645,67.5 326.25,132.978355 326.25,213.75 C326.25,294.521645 260.771645,360 180,360 C103.281748,360 40.3603619,300.928594 34.2383537,225.788293 C33.9148987,221.818271 36.303211,213.75 45,213.75 C53.696789,213.75 56.4421859,221.755661 56.8178824,225.682486 C62.8211467,288.429311 115.680037,337.5 180,337.5 C248.345238,337.5 303.75,282.095238 303.75,213.75 C303.75,145.404762 248.345238,90 180,90 Z" id="Path" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

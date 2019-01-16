@@ -37,8 +37,8 @@ export const SETTINGS = {
   'volume': {
     title: 'Volume of notification sound',
     min: 0,
-    max: 100,
-    step: 5,
+    max: 10,
+    step: 1,
   },
   [WORK]: {
     title: 'Work session in minutes',

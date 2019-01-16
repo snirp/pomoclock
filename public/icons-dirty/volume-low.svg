@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="360px" height="360px" viewBox="0 0 360 360" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>icons-dirty/volume-low</title>
+    <desc>Created with Sketch.</desc>
+    <g id="volume-low" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="volume_mute---material-copy-3" fill="#000000" points="22.5 112.409461 112.968 112.409461 224.4375 0 224.4375 359.28 112.968 246.870539 22.5 246.870539"></polygon>
+        <path d="M269.933288,250.032176 C266.647649,255.30555 259.709198,256.916927 254.435824,253.631288 C249.16245,250.345649 247.551073,243.407198 250.836712,238.133824 C261.675199,220.738305 267.507,200.864306 267.507,180.165 C267.507,159.110727 261.509296,138.943083 250.375184,121.391275 C247.046964,116.144671 248.602121,109.193404 253.848725,105.865184 C259.095329,102.536964 266.046596,104.092121 269.374816,109.338725 C282.76907,130.453419 290.007,154.791398 290.007,180.165 C290.007,205.125018 282.968678,229.110679 269.933288,250.032176 Z" id="Path" fill="#111111" fill-rule="nonzero"></path>
+    </g>
+</svg>
