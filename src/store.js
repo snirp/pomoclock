@@ -17,9 +17,9 @@ const store = new Vuex.Store({
     // Active timer: WORK / SHORT / LONG
     activeTimer: WORK,
     // Default timer settings in minutes
-    [WORK]: 2,
-    [SHORT]: 1,
-    [LONG]: 2,
+    [WORK]: 25,
+    [SHORT]: 5,
+    [LONG]: 15,
     // Initial value of seconds left (set on initializeStore)
     secondsLeft: undefined,
     // Incremented when worktimer is finished
