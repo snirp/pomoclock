@@ -4,12 +4,12 @@
     <git-corner href="https://github.com/snirp/pomoclock" size="10vmin"/>
     <div class="face">
       <circle-counter 
-        :stroke-width="1.5" 
-        :active-width="1.5" 
+        :stroke-width="1.2" 
+        :active-width="1.2" 
         :dash-spacing="0"
         :dash-count="totalSeconds"
         :active-count="elapsedSeconds"
-        :active-stroke="TIMERS[activeTimer].color"
+        :active-stroke="timers[activeTimer].color"
       />
       <router-view></router-view>
     </div>
@@ -26,7 +26,7 @@ import Favico from 'favico.js'
 
 export default {
   created(){
-    this.TIMERS = TIMERS
+    this.timers = TIMERS
     this.audio = new Audio(require('@/assets/beep.mp3'));
     // Keep running between refreshes: only reset should kill the counter
     if (this.$store.state.autoRun) this.start();
@@ -84,7 +84,7 @@ export default {
         }
       } else {
         message = `Time for a ${this[WORK]} minute work session!`
-      };
+      }
       this.notifyBrowser(message);
 
       if (this.playSound) {
@@ -125,7 +125,7 @@ export default {
       this.favicon = new Favico({
         type : 'rectangle',
         animation:'slide',
-        bgColor : this.TIMERS[this.activeTimer].color,
+        bgColor : this.timers[this.activeTimer].color,
       });
     },
     start(){
@@ -133,7 +133,7 @@ export default {
       this.favicon = new Favico({
         type : 'rectangle',
         animation:'slide',
-        bgColor: this.TIMERS[this.activeTimer].color,
+        bgColor: this.timers[this.activeTimer].color,
       });
     },
     pauze(){
@@ -173,7 +173,8 @@ body {
   position: absolute;
   top: 1%;
   left: 1%;
-  font-size: 2vmin;
+  font-size: 2.5vmin;
+  color: grey;
 }
 #app{
   height: 100vh;
@@ -187,5 +188,4 @@ body {
   position: relative;
   border-radius: 50%;
 }
-
 </style>
