@@ -1,46 +1,49 @@
 <template>
   <div>
     <div class="center-row">
-      <div class="button-container">
-        <div class="behind-button">
-          <arc-counter 
-            size="100%" 
-            :start="-225" 
-            :end="45" 
-            :dashCount="10" 
-            :activeCount="volume"
-            :strokeWidth="8"
-            :activeWidth="8"
-            :dashSpacing="0"
-            :activeStroke="getActiveStroke()"
-          />
-        </div>
-        <button @click="$parent.toggleSound" class="icon-link">
-          <icon v-if="playSound" :paths="icons['volume']" title="turn off" fill="currentColor" size="100%" />
-          <icon v-else :paths="icons['mute']" title="turn on" fill="currentColor" size="100%" />
-        </button>
-      </div>
-      <h1>{{formatMinutesAndSeconds(secondsLeft)}}</h1>
-      <div class="button-container">
-        <template v-if="interval">
+      <!-- Volume control, only display when running -->
+      <template v-if="interval">
+        <div class="button-container">
           <div class="behind-button">
             <arc-counter 
               size="100%" 
-              :start="225" 
-              :end="-45" 
-              :dashCount="sessionCount" 
-              :activeCount="sessionsCompleted+1"
-              :strokeWidth="8"
-              :activeWidth="8"
-              activeStroke="dodgerblue"
+              :start="-225" 
+              :end="45" 
+              :dashCount="10" 
+              :activeCount="volume"
+              :strokeWidth="12"
+              :activeWidth="12"
+              :dashSpacing="0"
+              :activeStroke="getActiveStroke()"
             />
           </div>
-          <button @click="$parent.reset" >
-            <icon :paths="icons['reset']" title="reset timer" fill="currentColor" size="100%" />
+          <button @click="$parent.toggleSound" class="icon-link">
+            <icon v-if="playSound" :paths="icons['volume']" title="turn off" fill="currentColor" size="100%" />
+            <icon v-else :paths="icons['mute']" title="turn on" fill="currentColor" size="100%" />
           </button>
-        </template>
-        <button @click="$parent.start" class="button-play" v-else>
-          <icon :paths="icons['play']" title="start timer" fill="currentColor" size="100%" />
+        </div>
+      </template>
+      <!-- Play button or running time -->
+      <h1 v-if="interval">{{formatMinutesAndSeconds(secondsLeft)}}</h1>
+      <button v-else @click="$parent.start" class="button-play" v-else>
+        <icon :paths="icons['play']" title="start timer" fill="currentColor" size="100%" />
+      </button>
+      <!-- Reset control, only display when running -->
+      <div v-if="interval" class="button-container">
+        <div class="behind-button">
+          <arc-counter 
+            size="100%" 
+            :start="225" 
+            :end="-45" 
+            :dashCount="sessionCount" 
+            :activeCount="sessionsCompleted+1"
+            :strokeWidth="12"
+            :activeWidth="12"
+            activeStroke="dodgerblue"
+          />
+        </div>
+        <button @click="$parent.reset" >
+          <icon :paths="icons['reset']" title="reset timer" fill="currentColor" size="100%" />
         </button>
       </div>
     </div>
@@ -218,8 +221,9 @@ button {
   transition: color 0.3s;
 }
 .button-play{
-  width: 80%;
-  height: 80%;
+  width: 16%;
+  height: 16%;
+  color: dodgerblue;
 }
 button:hover{
   cursor: pointer;
