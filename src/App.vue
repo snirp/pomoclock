@@ -92,17 +92,31 @@ export default {
         this.audio.play();
       }
     },
+    isNewNotificationSupported() {  
+      if (!window.Notification || !Notification.requestPermission) return false;  
+      if (Notification.permission == 'granted') {
+        throw new Error('You must only call this before calling Notification.requestPermission()');
+      }
+      try {  
+        new Notification('');  
+      } catch (e) {  
+        if (e.name == 'TypeError') return false;  
+      }
+      return true;  
+    },
     notifyBrowser(message) {
       if (Notification.permission === "granted") {
         new Notification(message);
       } else if (Notification.permission !== "denied") {
+        if (this.isNewNotificationSupported()) {
         this.pauze();
-        Notification.requestPermission().then((permission) => {
-          this.start();
-          if (permission === "granted") {
-            new Notification(message);
-          }
-        });
+          Notification.requestPermission().then((permission) => {
+            this.start();
+            if (permission === "granted") {
+              new Notification(message);
+            }
+          });
+        }
       }
     },
     switchTimer(){

@@ -2,30 +2,28 @@
   <div>
     <div class="center-row">
       <!-- Volume control, only display when running -->
-      <template v-if="interval">
-        <div class="button-container">
-          <div class="behind-button">
-            <arc-counter 
-              size="100%" 
-              :start="-225" 
-              :end="45" 
-              :dashCount="10" 
-              :activeCount="volume"
-              :strokeWidth="12"
-              :activeWidth="12"
-              :dashSpacing="0"
-              :activeStroke="getActiveStroke()"
-            />
-          </div>
-          <button @click="$parent.toggleSound" class="icon-link">
-            <icon v-if="playSound" :paths="icons['volume']" title="turn off" fill="currentColor" size="100%" />
-            <icon v-else :paths="icons['mute']" title="turn on" fill="currentColor" size="100%" />
-          </button>
+      <div v-if="interval" class="button-container">
+        <div class="behind-button">
+          <arc-counter 
+            size="100%" 
+            :start="-225" 
+            :end="45" 
+            :dashCount="10" 
+            :activeCount="volume"
+            :strokeWidth="12"
+            :activeWidth="12"
+            :dashSpacing="0"
+            :activeStroke="getActiveStroke()"
+          />
         </div>
-      </template>
+        <button @click="$parent.toggleSound" class="icon-link">
+          <icon v-if="playSound" :paths="icons['volume']" title="turn off" fill="currentColor" size="100%" />
+          <icon v-else :paths="icons['mute']" title="turn on" fill="currentColor" size="100%" />
+        </button>
+      </div>
       <!-- Play button or running time -->
       <h1 v-if="interval">{{formatMinutesAndSeconds(secondsLeft)}}</h1>
-      <button v-else @click="$parent.start" class="button-play" v-else>
+      <button v-else @click="$parent.start" class="button-play">
         <icon :paths="icons['play']" title="start timer" fill="currentColor" size="100%" />
       </button>
       <!-- Reset control, only display when running -->
@@ -47,7 +45,7 @@
         </button>
       </div>
     </div>
-
+    <!-- The radial settings "dials" -->
     <router-link v-for="dial in dials" :key="dial.position" :to="{ name: 'settings', params: { name: dial.name }}">
       <polar height="12%" width="24%" offset="145%" :setstraight="false" :angle="dial.position/8*360">
         <div class="dial" :style="`background-color: ${dial.color};`">
@@ -58,7 +56,7 @@
         </div>
       </polar>
     </router-link>
-
+    <!-- Indicator for active timer -->
     <polar 
       height="3%" 
       width="3%" 
